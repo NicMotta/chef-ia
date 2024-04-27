@@ -1,23 +1,24 @@
-import { useState } from "react";
-import { CONTENT, URL } from "../utils/constants";
+import { useEffect, useState } from "react";
+import { useStore } from '@nanostores/react';
+import { CONTENT, URL, DATA_MOCK } from "../utils/constants";
+import { isLoading, responseData, recipe } from '../utils/store';
 
 export default function InputText(props) {
   const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState({});
-  const [error, setError] = useState(null);
-
+  const $isLoading = useStore(isLoading);
+  const $response = useStore(responseData);
 
   const postData = {
-      model: "chef",
-      options: {
-          seed: 1823,
-          temperature: 0.5
-      },
-      prompt: value,
-      stream: false
+    model: "chef",
+    options: {
+      seed: Math.floor(Math.random() * 10000) + 1,
+      temperature: 0.5
+    },
+    prompt: value,
+    stream: false
   }
 
+  // TODO Refactorizar y mover a archivo /utils/services.js
   async function dataPost() {
     await fetch(URL, {
       method: 'POST',
@@ -31,8 +32,7 @@ export default function InputText(props) {
       })
       .then(data => {
         if (data) {
-          setResponse(data.response);
-          console.log(response, data, JSON.parse(data.response))
+          isLoading.set(false)
         }
       })
       .catch(error => {
@@ -46,10 +46,19 @@ export default function InputText(props) {
   }
 
   const handleClick = async () => {
-    setLoading(true);
+    responseData.set(null);
+    recipe.set(null);
+    isLoading.set(true);
+    responseData.set(DATA_MOCK);
     setValue('');
-    dataPost();
+    //dataPost();
   }
+
+  useEffect(() => {
+    if ($response) {
+      isLoading.set(false);
+    }
+  }, [$isLoading, $response]);
 
   return (
     <>
@@ -58,13 +67,13 @@ export default function InputText(props) {
         type="text"
         id='text-input'
         name={props.name}
-        placeholder={loading ? CONTENT.placeholder.loading : CONTENT.placeholder.input}
+        placeholder={$isLoading ? CONTENT.placeholder.loading : CONTENT.placeholder.input}
         value={value}
         onChange={handleChange}
-        disabled={loading}
+        disabled={$isLoading}
       />
-      <button className="text-xl m-auto border-2 rounded-lg p-2 border-black bg-orange-500 hover:bg-orange-400 disabled:bg-gray-300 disabled:border-gray-500 disabled:text-gray-500" disabled={value === '' || loading} onClick={handleClick}>
-        {loading ? CONTENT.button.loading : CONTENT.button.start}
+      <button className="text-xl m-auto border-2 rounded-lg p-2 border-black bg-orange-500 hover:bg-orange-400 disabled:bg-gray-300 disabled:border-gray-500 disabled:text-gray-500" disabled={value === '' || $isLoading} onClick={handleClick}>
+        {$isLoading ? CONTENT.button.loading : CONTENT.button.start}
       </button>
     </>
   );
