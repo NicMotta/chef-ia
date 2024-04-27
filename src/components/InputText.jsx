@@ -9,12 +9,12 @@ export default function InputText(props) {
 
 
   const postData = {
-      model: "llama3:8b",
+      model: "chef",
       options: {
           seed: 1823,
           temperature: 0.5
       },
-      prompt: "¿Cuánto es 2 + 2?",
+      prompt: value,
       stream: false
   }
 
