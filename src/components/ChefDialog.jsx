@@ -1,6 +1,5 @@
 import { useStore } from '@nanostores/react';
 import { isLoading, responseData, recipe } from '../utils/store';
-import { CONTENT} from '../utils/constants';
 import { getDialogChef } from '../utils/helpers';
 import TextDialog from './TextDialog';
 import Button from './Button';
