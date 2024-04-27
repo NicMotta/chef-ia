@@ -18,7 +18,6 @@ export const CONTENT = {
     start: "Preguntar al chef",
     loading: "Pensando ...",
   },
-  dialog: "---",
 };
 
 export const URL = "http://localhost:11434/api/generate";

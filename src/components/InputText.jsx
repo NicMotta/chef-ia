@@ -61,9 +61,9 @@ export default function InputText(props) {
   }, [$isLoading, $response]);
 
   return (
-    <>
+    <div className="p-2 flex flex-col gap-3">
       <input
-        className="border-2 border-black p-2 rounded-lg text-xl w-3/4 m-auto disabled:border-gray-500"
+        className="border-2 border-black p-2 rounded-lg text-xl w-full md:w-3/4 m-auto disabled:border-gray-500"
         type="text"
         id='text-input'
         name={props.name}
@@ -75,6 +75,6 @@ export default function InputText(props) {
       <button className="text-xl m-auto border-2 rounded-lg p-2 border-black bg-orange-500 hover:bg-orange-400 disabled:bg-gray-300 disabled:border-gray-500 disabled:text-gray-500" disabled={value === '' || $isLoading} onClick={handleClick}>
         {$isLoading ? CONTENT.button.loading : CONTENT.button.start}
       </button>
-    </>
+    </div>
   );
 }
