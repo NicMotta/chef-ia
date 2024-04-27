@@ -30,8 +30,10 @@ export default function InputText(props) {
         return response.json();
       })
       .then(data => {
-        setResponse(data);
-        console.log(response, data)
+        if (data) {
+          setResponse(data.response);
+          console.log(response, data, JSON.parse(data.response))
+        }
       })
       .catch(error => {
         setError(error);
