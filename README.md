@@ -1,55 +1,83 @@
-# Astro Starter Kit: Basics
+# Chef IA con Ollama local
 
-```sh
-npm create astro@latest -- --template basics
+## ¿Qué es Ollama?
+
+Ollama es una herramienta que nos permite correr, modificar y crear modelos fácilmente y de manera local. Tiene varios modelos integrados como LLaMa2 y 3 de Meta, Gemma de Google y Mistral que es Opensource.
+
+Nos permite crear modelos en base a otros con diferentes prompts de entrada, por ejempo usando LLaMa3 pero que se comporte como un chef profesional, por lo tanto todas las respuestas desde el inicio estaría en un papel de chef y no abandonaría ese rol. Ese “nuevo” modelo con nuestras preferencias de prompt, temperatura y demás lo podemos guardar y utilizar “localmente” para nuestros proyectos.
+
+<https://github.com/ollama/ollama/blob/main/docs/api.md#create-a-model>
+
+## Instalar y correr Ollama de forma local
+
+Ir a [ollama.com](http://ollama.com) y descargar el instalador correspondiente.
+
+Abrir una terminal, para instalar llama3 (La última versión publicada por Meta), corremos el comando `ollama pull llama3:8b`
+
+- `llama3`: es la versión que queremos
+- `8b`: es el tamaño del modelo, en este caso 8 billones
+- El peso es de `4.7gb`
+
+Una vez descargado, corremos el comando `ollama run llama3:8b` y nos inicializa el servidor local, *Nota: mientras el servidor este corriendo, no nos consume recursos.*
+
+### Hacerle peticiones
+
+Para enviarle `prompts` a Ollama podemos escribir en la misma terminal donde el proyecto esté corriendo, al hacer la petición comenzará a pensar y por lo tanto usará recursos. Dependiendo los recursos que tengamos es el tiempo que tardará en generar la respuesta.
+
+### Hacer un POST desde Front
+
+Para hacer un POST desde frontend, podemos utilizar su API, por defecta usa `localhost:11434`
+
+`http://localhost:11434/api/generate`
+
+A eso le tenemos que sumar un objeto en el `body`:
+
+```
+{
+    "model": "llama3:8b",
+    "options": {
+      "seed": 1823
+        "temperature": 0.5
+    },
+    "prompt": "¿Cuánto es 2 + 2?",
+    "stream": false
+}
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+`model` Modelo que vamos a utilizar
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+`temperature` Es la libertad que tiene la IA de imaginar, a mayor temperatura mayor será la creatividad de la respuesta, a menor temperatura más se ajustara a dar la información necesaria sin sumar detalles extras.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+`seed` La semilla, típica para el uso de random, se utiliza para generar otra respuesta distinta a otra. A misma `temperature` y `seed`, igual respuesta.
 
-## 🚀 Project Structure
+`prompt` Lo que el usuario ingresa
 
-Inside of your Astro project, you'll see the following folders and files:
+Respuesta que obtendremos:
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+```json
+"model": "llama3:8b",
+    "created_at": "2024-04-21T15:40:51.7320049Z",
+    "response": "La respuesta es... 4! 😊",
+    "done": true,
+    "context": [...],
+    "total_duration": 4848619100,
+    "load_duration": 2535200,
+    "prompt_eval_duration": 428558000,
+    "eval_count": 10,
+    "eval_duration": 4416292000
+}
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/af91acff-9fc9-4d7c-8360-7d7099c47c37/9319c88c-e781-45e9-afd3-fb1ce4669378/Untitled.png)
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Posible prompt inicial:
 
-Any static assets, like images, can be placed in the `public/` directory.
+Simulemos que sos un chef profesional y la gente te pide ayuda para hacer recetas con los ingredientes que tiene disponibles en su casa. Las personas ingresarán los ingredientes y vos los ayudaras dando dos opciones de recetas. No aceptaras ingredientes que no sean comestibles.
+La única manera de responder es con el siguiente formato:
+{
+”response”: aqui va tu respuesta,
+”recipesTitle”: [aquí van las receteas posibles separadas por coma, por ejemplo:“Sopa de tomate”, “Sopa de zanahoria”],
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-# chef-ia
+“recipes”:[acá van las recetas de como preparar las recipesTitle, por ejemplo: como preparar una sopa de tomate]
+}
+Solo responder con el formato de respuesta pedido.
