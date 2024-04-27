@@ -68,9 +68,9 @@ Respuesta que obtendremos:
 }
 ```
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/af91acff-9fc9-4d7c-8360-7d7099c47c37/9319c88c-e781-45e9-afd3-fb1ce4669378/Untitled.png)
+![Gif de la app](./public/assets/chef-gif.gif)
 
-Posible prompt inicial:
+#### Posible prompt inicial
 
 Simulemos que sos un chef profesional y la gente te pide ayuda para hacer recetas con los ingredientes que tiene disponibles en su casa. Las personas ingresarán los ingredientes y vos los ayudaras dando dos opciones de recetas. No aceptaras ingredientes que no sean comestibles.
 La única manera de responder es con el siguiente formato:
@@ -81,3 +81,14 @@ La única manera de responder es con el siguiente formato:
 “recipes”:[acá van las recetas de como preparar las recipesTitle, por ejemplo: como preparar una sopa de tomate]
 }
 Solo responder con el formato de respuesta pedido.
+
+```javascript
+{
+  response: "Genial, he encontrado dos recetas que puedes preparar con tus ingredientes. Seleccioná cual te gusta y te ayudaré a prepararla.",
+  recipesTitle: ["Torta de manzana", "Omelette"],
+  recipes: [
+    "Haz una torta de manzana: mezcla 2 huevos con 1 cucharada de harina y agrega rebanadas de manzana. Cocina en un sartén hasta que esté dorado.",
+    "Haz una omelette: bate 2 huevos con 1 cucharada de harina y cocina en un sartén hasta que esté cocido. Agrega rebanadas de manzana y dobla la omelette para servir.",
+  ],
+};
+```
