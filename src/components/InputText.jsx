@@ -34,6 +34,8 @@ export default function InputText(props) {
       .then(data => {
         if (data) {
           isLoading.set(false)
+          responseData.set(data)
+
         }
       })
       .catch(error => {
